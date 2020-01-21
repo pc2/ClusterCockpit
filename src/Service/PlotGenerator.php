@@ -256,10 +256,10 @@ class PlotGenerator
                 $options);
         }
 
-        if ( $options['mode'] === 'list' ){
+#        if ( $options['mode'] === 'list' ){
             /* add reference line */
             $options['color'] = 'rgb(0,0,0)';
-            $value = $metric->normal;
+            $value = $metric->peak;
             $x = array(0, end($x));
             $y = array($value,$value);
 
@@ -272,7 +272,7 @@ class PlotGenerator
             if ($value > $maxVal){
                 $maxVal = $value;
             }
-        }
+#        }
 
         $options['maxVal'] = $maxVal;
         $options['unit'] = $metric->getUnit();

@@ -126,7 +126,7 @@ class JobListController extends AbstractFOSRestController
                 "username" => $job->getUser()->getUserId(),
                 "userid" => $job->getUser()->getId(),
                 "numnodes" => $job->getNumNodes(),
-                "runtime" => $iv->format('%h h %i m'),
+                "runtime" => $iv->format('%d d %h h %i m'),
                 "starttime" => $job->getStartTime(),
                 "tags" => $job->getTagsArray()
             )

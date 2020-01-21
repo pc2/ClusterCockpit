@@ -306,7 +306,7 @@ class JobViewController extends AbstractController
         return $this->render('jobViews/viewJob-ajax.html.twig',
             array(
                 'job' => $job,
-                'duration' => $iv->format('%h h %i m'),
+                'duration' => $iv->format('%d d %h h %i m'),
                 'config' => $config,
                 'tags' => $alltags,
                 'backend' => $jobCache->getBackend()

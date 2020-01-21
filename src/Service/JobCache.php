@@ -162,8 +162,8 @@ class JobCache
         if ( $mode === 'view' ) { /* Single Job View */
             $options['mode'] = 'view';
             $options['autotick'] = true;
-            $options['sample'] = 0;
-            $options['legend'] = false;
+            $options['sample'] = 1000;
+            $options['legend'] = true;
 
             if ( $options['plot_view_showRoofline'] == 'true' ) {
                 $this->_plotGenerator->generateJobRoofline(
@@ -200,11 +200,11 @@ class JobCache
 
         foreach ($metrics as $metric){
 
-            if ( $mode === 'view' or $live == false ) {
-                if ( $options['plot_general_colorBackground'] === 'true' ) {
-                    $this->_colorBackground($options, $metric, $stats);
-                }
-            }
+#            if ( $mode === 'view' or $live == false ) {
+#                if ( $options['plot_general_colorBackground'] === 'true' ) {
+#                    $this->_colorBackground($options, $metric, $stats);
+#                }
+#            }
 
             $this->_plotGenerator->generateMetricPlot(
                 $job,

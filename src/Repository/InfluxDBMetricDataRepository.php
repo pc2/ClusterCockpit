@@ -50,12 +50,13 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
     {
         $nodes = $job->getNodeNameArray();
 
-        $flopsAny = $metrics['flops_any'];
+	$flopsAny = $metrics['flops_any'];
+	$this->_logger->info(json_encode($metrics));
         $memBw = $metrics['mem_bw'];
         $nodes = implode('|', $nodes);
 
         $query = "SELECT {$flopsAny->name}*{$flopsAny->scale}
-            FROM {$flopsAny->measurement}
+            FROM \"ClusterCockpit\".\"data\".{$flopsAny->measurement}
             WHERE  time >= {$job->startTime}s AND time <= {$job->stopTime}s
             AND host =~ /$nodes/";
 
@@ -63,7 +64,7 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
         $points[0] = $result->getPoints();
 
         $query = "SELECT {$memBw->name}*{$memBw->scale}
-            FROM {$memBw->measurement}
+            FROM \"ClusterCockpit\".\"data\".{$memBw->measurement}
             WHERE  time >= {$job->startTime}s AND time <= {$job->stopTime}s
             AND host =~ /$nodes/";
 
@@ -97,15 +98,19 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
             return false;
         }
 
-        $query = "SELECT COUNT({$metric->name})
-            FROM {$metric->measurement}
+        #$query = "SELECT COUNT({$metric->name})
+        $query = "SELECT {$metric->name}
+            FROM \"ClusterCockpit\".\"data\".\"{$metric->measurement}\"
             WHERE  time >= {$job->startTime}s AND time <= {$job->stopTime}s
-            AND host = '{$nodes->first()->getNodeId()}'";
-
+            AND \"host\" = '{$nodes->first()->getNodeId()}'";
         $this->_logger->info("InfluxDB QUERY: $query");
-        $result = $this->_database->query($query);
+	$result = $this->_database->query($query);
+
         $points = $result->getPoints();
-        $count = $points[0]['count'];
+	//$count = $points[0]['count'];
+	#$str=json_encode($points);
+        #$this->_logger->info("points $str");
+        $count = count($points);
 
         if ( $count < 4 ){
             $job->hasProfile = false;
@@ -129,7 +134,7 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
                 MEAN($name) * $scale AS {$name}_avg
                 ,MIN($name)  * $scale AS {$name}_min
                 ,MAX($name)  * $scale AS {$name}_max
-                FROM {$metric->measurement}
+                FROM \"ClusterCockpit\".\"data\".{$metric->measurement}
                 WHERE  time >= {$job->startTime}s AND time <= {$job->stopTime}s
                 AND host =~ /$nodes/ GROUP BY host";
 	    $this->_logger->info("InfluxDB QUERY: $query");
@@ -143,7 +148,7 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
                 MEAN($name) * $scale AS {$name}_avg
                 ,MIN($name)  * $scale AS {$name}_min
                 ,MAX($name)  * $scale AS {$name}_max
-                FROM {$metric->measurement}
+                FROM \"ClusterCockpit\".\"data\".{$metric->measurement}
                 WHERE  time >= {$job->startTime}s AND time <= {$job->stopTime}s
                 AND host =~ /$nodes/";
 
@@ -153,6 +158,7 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
             $points = $result->getPoints();
             $this->_timer->stop( 'InfluxDB');
 
+	    $this->_logger->info(json_encode($points));
             foreach ( $points[0] as $index => $value ){
                 if ($index != 'time'){
                     $stats[$index] = round($value,2);
@@ -201,7 +207,7 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
 
             $query = "SELECT
                 MEAN({$metric->name}) * $scale AS {$metric->name}
-                FROM {$metric->measurement}
+                FROM \"ClusterCockpit\".\"data\".{$metric->measurement}
                 WHERE  time >= {$job->startTime}s AND time <= {$job->stopTime}s
                 AND host =~ /$nodes/ GROUP BY time({$sampletime}s), host";
 
@@ -241,7 +247,7 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
         $metric = $metrics->first();
 
         $query = "SELECT COUNT({$metric->name})
-            FROM {$metric->measurement}
+            FROM \"ClusterCockpit\".\"data\".{$metric->measurement}
             WHERE  time >= {$job->startTime}s AND time <= {$job->stopTime}s
             AND host = '$id'";
 

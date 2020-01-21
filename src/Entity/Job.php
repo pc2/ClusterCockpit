@@ -224,6 +224,10 @@ class Job
     {
         $this->stopTime = $stopTime;
     }
+    public function setIsRunning($ir)
+    {
+        $this->isRunning = $ir;
+    }
 
     public function getNodeIdArray()
     {

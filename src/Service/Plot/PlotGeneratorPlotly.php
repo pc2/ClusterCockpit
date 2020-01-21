@@ -183,6 +183,7 @@ class PlotGeneratorPlotly implements PlotGeneratorInterface
     }
     public function generateLine(&$data, $name, &$x, &$y, $options)
     {
+        	
         $line = array(
             "x" => $x,
             "y" => $y,
@@ -220,7 +221,7 @@ class PlotGeneratorPlotly implements PlotGeneratorInterface
                 "dtick" => $options['xDtick'],
                 "title" => "runtime [$xUnit]"
             ),
-            "showlegend" => $options['legend']
+	    "showlegend" =>  $options['legend']
         );
 
 

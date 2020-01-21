@@ -43,10 +43,11 @@ class JobsController extends AbstractFOSRestController
     public function postJobsAction(Request $request)
     {
         $jobId = $request->request->get('job_id');
-        $userId = $request->request->get('user_id');
+	$userId = $request->request->get('user_id');
         $clusterId = $request->request->get('cluster_id');
+	
+	$startTime = $request->request->get('start_time');
         $nodes = $request->request->get('nodes');
-        $startTime = $request->request->get('start_time');
         $jobScript = $request->request->get('job_script');
 
         $job_rep = $this->getDoctrine()->getRepository(Job::class);
@@ -63,7 +64,8 @@ class JobsController extends AbstractFOSRestController
         $job->setJobId($jobId);
         $job->setStartTime($startTime);
 
-        $user = $user_rep->findOneByUserId($userId);
+        #$user = $user_rep->findOneByUserId($userId);
+        $user = $user_rep->findOneByUsername($userId);
         if (empty($user)) {
             throw new HttpException(400, "No such user ID: ".$userId);
         }
@@ -91,6 +93,9 @@ class JobsController extends AbstractFOSRestController
         $job->setNumNodes(count($nodes));
 
         $job->severity = 0;
+        $job->isRunning = True;
+        $job->isCached = False;
+        $job->duration=600;
         $job->memBwAvg = 0;
         $job->memUsedAvg = 0;
         $job->flopsAnyAvg = 0;
@@ -113,24 +118,26 @@ class JobsController extends AbstractFOSRestController
     public function patchJobsAction(Job $id, ParamFetcher $paramFetcher)
     {
         $stop_time = $paramFetcher->get('stop_time');
-        /* $repository = $this->getDoctrine()->getRepository(\App\Entity\RunningJob::class); */
-        /* $runningJob = $repository->findOneByJobId($jobId); */
+        /*$repository = $this->getDoctrine()->getRepository(\App\Entity\RunningJob::class); */
+	/*$runningJob = $repository->findOneByJobId($id); */
 
         if (empty($id)) {
             throw new HttpException(400, "No such running job: $id");
         }
 
         /* transfer job to job table */
-        /* $job =  new Job; */
-        /* $job->import($runningJob); */
-        /* $job->setStopTime($stop_time); */
-        /* $em = $this->getDoctrine()->getManager(); */
-        /* $em->persist($job); */
+/*        $job =  new Job; 
+        $job->import($runningJob); 
+        $job->setStopTime($stop_time); 
+        $em = $this->getDoctrine()->getManager(); 
+	$em->persist($job); */
 
         /* cleanup running job entry */
         $em = $this->getDoctrine()->getManager();
-        $id->getNodes()->clear();
-        $em->remove($id);
+        #$id->getNodes()->clear();
+        $id->setStopTime($stop_time); 
+        $id->setIsRunning(false); 
+        #$em->remove($id);
 
         $em->flush();
 
