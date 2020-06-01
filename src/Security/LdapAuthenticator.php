@@ -35,6 +35,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -129,33 +130,48 @@ class LdapAuthenticator extends AbstractFormLoginAuthenticator
         $password = $credentials['password'];
         $configuration = new Configuration($this->_em);
         $config['ldap_user_base'] = $configuration->getValue('ldap_user_base');
-        $config['ldap_user_key'] = $configuration->getValue('ldap_user_key');
+	$config['ldap_user_key'] = $configuration->getValue('ldap_user_key');
+        $config['ldap_connection_url'] = $configuration->getValue('ldap_connection_url');
 
         if ('' === (string) $password) {
             throw new BadCredentialsException('The presented password must not be empty.');
         }
 
-        $dbPassword = $user->getPassword();
+	$dbPassword = $user->getPassword();
 
-        if ( empty($dbPassword) ) {
-            /* authenticate with ldap bind */
-            if ( $config['ldap_user_base'] === false || $config['ldap_user_key'] === false ){
-                throw new BadCredentialsException('Ldap not supported.');
-            }
+	$allowed=FALSE;
+	$allowedusers = explode(" ", getenv('ALLOWEDUSERS'));
 
-            try {
-                $this->_ldap->bindUser($config, $username, $password);
-            } catch (ConnectionException $e) {
-                throw new BadCredentialsException('Invalid credentials.');
-            }
-            return true;
-        } else {
-            /* authenticate with password */
-            if ($this->_passwordEncoder->isPasswordValid($user, $password)) {
-                return true;
-            }
-            return false;
-        }
+	foreach($allowedusers as $alloweduser) {
+		if(trim($alloweduser)==$username){
+			$allowed=TRUE;
+		}
+	}
+
+	if ($allowed){
+		if ( empty($dbPassword) ) {
+		    /* authenticate with ldap bind */
+		    if ( $config['ldap_user_base'] === false || $config['ldap_user_key'] === false ){
+			throw new BadCredentialsException('Ldap not supported.');
+		    }
+
+		    try {
+			$this->_ldap->bindUser($config, $username, $password);
+		    } catch (ConnectionException $e) {
+			throw new BadCredentialsException('Invalid credentials.');
+		    }
+		    return true;
+		} else {
+		    /* authenticate with password */
+		    if ($this->_passwordEncoder->isPasswordValid($user, $password)) {
+			return true;
+		    }
+		    return false;
+		}
+	}else{
+		throw new UsernameNotFoundException('User not enabled, please contact pc2-support@uni-paderborn.de.');
+		return false;
+	}
 
         return false;
     }

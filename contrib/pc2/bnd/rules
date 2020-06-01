@@ -1,0 +1,36 @@
+[
+        {
+                "attrs":[
+                        {
+                                "measurement": "load_one","scale":1,"measurementname":"CPU load","type":"mean","granularity":"node","condition":"greater than","conditionvalue":"45","unit":""
+                        }
+                ],
+                "severity":"critical",
+                "tag": "highload",
+                "msg": "Some of the compute nodes in the calculation experience a high load. This indicates an issue with MPI or OpenMP-settings in the job.",
+                "url": "https://wikis.uni-paderborn.de/pc2doc/Noctua/Recommendationsystem/hints/1"
+        },
+        {
+                "attrs":[
+                        {
+                                "measurement": "load_one","scale":1,"measurementname":"CPU load","type":"mean","granularity":"node","condition":"lower than","conditionvalue":"35","unit":""
+                        }
+                ],
+                "severity":"critical",
+                "tag": "lowload",
+                "msg": "Some of the compute nodes in the calculation experience a low load. This indicates an issue with MPI or OpenMP-settings in the job.",
+                "url": "https://wikis.uni-paderborn.de/pc2doc/Noctua/Recommendationsystem/hints/2"
+        },
+        {
+                "attrs":[
+                        {
+                                "measurement": "mem_used","scale":1e-6,"measurementname":"Memory usage","type":"max","granularity":"node","condition":"greater than","conditionvalue":"160","unit":"GB"
+                        }
+                ],
+                "severity":"warning",
+                "tag": "highmem",
+                "msg": "The memory usage on some nodes in the job is rather high. If the program allocates much more memory it might be killed with an over-memory event.",
+                "url": "https://wikis.uni-paderborn.de/pc2doc/Noctua/Recommendationsystem/hints/3"
+        }
+]
+

@@ -101,6 +101,10 @@
                                 <td scope="col">{{ job.startTime|date('d.m.y - H:i') }}</td>
                             </tr>
                             <tr>
+                                <th scope="col"> Job stop </th>
+                                <td scope="col">{{ job.stopTime|date('d.m.y - H:i') }}</td>
+                            </tr>
+                            <tr>
                                 <th scope="col"> Walltime </th>
                                 <td scope="col">{{ duration }}</td>
                             </tr>
@@ -145,6 +149,15 @@
         </div>
         <div class="col-4" id="roofline"> </div>
         <div class="col-4" id="polarplot"> </div>
+    </div>
+    
+    <div class="row">
+                      Recommendations to improve this job:
+                    <table class="table table-sm table-striped">
+                        <tbody>
+                            {{ job.problems|raw }}
+                        </tbody>
+                    </table>
     </div>
 
     {% set metrics = job.cluster.metricLists[mode].metrics %}

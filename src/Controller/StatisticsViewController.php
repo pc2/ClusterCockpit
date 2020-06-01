@@ -47,8 +47,8 @@ class StatisticsViewController extends AbstractController
         $control->setMonth(date("m"));
         $control->setCluster(1);
 
-        $form = $this->createForm(StatisticsControlType::class, $control);
-        $form->handleRequest($request);
+	$form = $this->createForm(StatisticsControlType::class, $control);
+#        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $control = $form->getData();

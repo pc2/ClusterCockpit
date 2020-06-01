@@ -288,6 +288,28 @@ class JobRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    public function findAllJobs()
+    {
+        $qb = $this->createQueryBuilder('j');
+
+        return $qb
+            ->where("j.startTime > 0")
+            ->orderBy('j.startTime', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findStoppedJobs()
+    {
+        $qb = $this->createQueryBuilder('j');
+
+        return $qb
+            ->where("j.isRunning = false")
+            ->orderBy('j.startTime', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
     public function findCachedJobs()
     {

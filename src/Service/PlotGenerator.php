@@ -232,29 +232,31 @@ class PlotGenerator
         $color->init($colorState, count($nodes));
 
         foreach ($nodes as $node){
+		$nodeId = $node->getNodeId();
+		if( isset($data[$metricName][$nodeId])){
+		    $x = $data[$metricName][$nodeId]['x'];
+		    $y = $data[$metricName][$nodeId]['y'];
 
-            $nodeId = $node->getNodeId();
-            $x = $data[$metricName][$nodeId]['x'];
-            $y = $data[$metricName][$nodeId]['y'];
+		    /* get max y for axis range */
+		    $maxVal = max($maxVal,max($y));
+		    /* adjust x axis time unit */
+		    $xAxis = $this->_tsHelper->scaleTime($options, $x);
 
-            /* get max y for axis range */
-            $maxVal = max($maxVal,max($y));
-            /* adjust x axis time unit */
-            $xAxis = $this->_tsHelper->scaleTime($options, $x);
+	/*             /1* downsample data frequency *1/ */
+	/*             if ( $options['sample'] > 0 ){ */
+	/*                 $this->_tsHelper->downsampling($x,$y,$options['sample']); */
+	/*             } */
 
-/*             /1* downsample data frequency *1/ */
-/*             if ( $options['sample'] > 0 ){ */
-/*                 $this->_tsHelper->downsampling($x,$y,$options['sample']); */
-/*             } */
+		    $options['color'] = $color->getColor($colorState);
 
-            $options['color'] = $color->getColor($colorState);
-
-            $this->_plotter->generateLine(
-                $lineData,
-                $nodeId,
-                $x, $y,
-                $options);
-        }
+		    $this->_plotter->generateLine(
+			$lineData,
+			$nodeId,
+			$x, $y,
+			$options);
+	    } 
+	}
+	if(isset($x)){
 
 #        if ( $options['mode'] === 'list' ){
             /* add reference line */
@@ -281,6 +283,7 @@ class PlotGenerator
 
         $plot->setOptions($this->_plotter->generateLayout($metricName, $options));
         $plot->setData($lineData);
-        $job->jobCache->addPlot($plot);
+	$job->jobCache->addPlot($plot);
+	}
     }
 }

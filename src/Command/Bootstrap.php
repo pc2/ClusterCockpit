@@ -42,8 +42,9 @@ class Bootstrap extends Command
 {
     private static $_defaultSortConfig = array(
         array('1', '0', 'Severity', 'job',  'severity'),
-        array('2', '0', 'MemBwAvg', 'data', 'mem_bw'),
-        array('3', '1', 'FlopsAny', 'data', 'flops_any'),
+        array('2', '0', 'MemBwAvg', 'data', 'mem_bw_sum'),
+        array('3', '1', 'FlopsAny', 'data', 'flops_any_sum'),
+        array('3', '1', 'MemUsed', 'data', 'mem_used'),
         array('4', '0', 'NumNodes', 'job',  'numNodes')
     );
 

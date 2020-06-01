@@ -33,11 +33,11 @@ class LdapManager
     public function bindUser($config, $uid, $password)
     {
         $ldap = Ldap::create('ext_ldap', array(
-            'connection_string' => $config['ldap_connection_url']
+            'connection_string' => $config['ldap_connection_url'], 'encryption' => 'ssl'
         ));
         $base = $config['ldap_user_base'];
         $key = $config['ldap_user_key'];
-        $dn = $key.'='.$uid.','.$base;
+	$dn = $key.'='.$uid.','.$base;
         /* $username = $this->_ldap->escape($dn, '', LdapInterface::ESCAPE_DN); */
 
         $ldap->bind($dn, $password);
@@ -46,9 +46,9 @@ class LdapManager
     public function queryUsers($config)
     {
         $ldap = Ldap::create('ext_ldap', array(
-            'connection_string' => $config['ldap_connection_url']
+            'connection_string' => $config['ldap_connection_url'], 'encryption' => 'ssl'
         ));
-        $password = getenv('LDAP_PW');
+	$password = getenv('LDAP_PW');
         $dn = $config['ldap_search_dn'];
         $baseDn = $config['ldap_user_base'];
         $filter = $config['ldap_user_filter'];

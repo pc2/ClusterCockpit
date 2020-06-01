@@ -85,7 +85,7 @@ class TagController extends AbstractFOSRestController
         $view->setStatusCode(200);
         $view->setData("SUCCESS");
         return $this->handleView($view);
-    } // "post_jobtag"           [POST] /api/tags
+    } // "post_jobtag"           [POST] /web/tags
 
     public function deleteTagAction(Request $request)
     {

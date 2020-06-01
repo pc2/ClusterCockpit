@@ -23,3 +23,10 @@ yarn-error.log
 ###> symfony/web-server-bundle ###
 /.web-server-pid
 ###< symfony/web-server-bundle ###
+
+
+.htaccess
+composer.phar
+.env
+.lmod.d
+contrib/pc2/bnd/pandoc-2.9.2.1*

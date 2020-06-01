@@ -67,6 +67,10 @@ class Job
      *  @ORM\Column(type="integer")
      */
     public $startTime;
+    /**
+     *  @ORM\Column(type="integer")
+     */
+    public $lastupdate;
 
     /**
      *  @ORM\Column(type="integer", nullable=true)
@@ -131,6 +135,15 @@ class Job
      *  @ORM\Column(type="float", nullable=true)
      */
     public $slot_4;
+    
+    /**
+     *  @ORM\Column(type="text", nullable=true)
+     */
+    private $problems;
+    /**
+     *  @ORM\Column(type="text", nullable=true)
+     */
+    private $outputRecommendations;
 
     public $hasProfile;
 
@@ -217,12 +230,17 @@ class Job
 
     public function getStopTime()
     {
+	if ( is_null($this->stopTime)){
+		return -1;
+	}
         return $this->stopTime;
     }
 
     public function setStopTime($stopTime)
     {
-        $this->stopTime = $stopTime;
+	 $this->stopTime = $stopTime;
+	 $this->duration = $stopTime-$this->startTime;
+	    
     }
     public function setIsRunning($ir)
     {
@@ -254,6 +272,14 @@ class Job
     public function getNodes()
     {
         return $this->nodes;
+    }
+    public function getlastupdate()
+    {
+        return $this->lastupdate;
+    }
+    public function setlastupdate($lastupdate)
+    {
+        $this->lastupdate=$lastupdate;
     }
 
     public function addNode($node)
@@ -288,12 +314,34 @@ class Job
     {
         $this->jobScript = $jobScript;
     }
+    public function setOutputRecommendations($outputRecommendations)
+    {
+        $this->outputRecommendations = $outputRecommendations;
+    }
+    public function getOutputRecommendations()
+    {
+        return $this->outputRecommendations;
+    }
 
     public function isRunning()
     {
         return $this->isRunning;
     }
-
+    
+    public function clearProblems()
+    {
+        $this->problems="";
+    }
+    public function getProblems()
+    {
+        return $this->problems;
+    }
+    
+    public function addProblem($t)
+    {
+       $this->problems=$this->problems.$t."\n";
+    }
+   
     /**
      * @return Collection|JobTag[]
      */
@@ -321,7 +369,6 @@ class Job
         if (!$this->tags->contains($tag)) {
             $this->tags[] = $tag;
         }
-
         return $this;
     }
 

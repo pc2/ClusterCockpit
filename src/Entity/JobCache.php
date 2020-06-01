@@ -65,13 +65,15 @@ class JobCache
     {
         $jsonPlots = array();
 
-        foreach ($metrics as $metric){
-            $plot = $this->plots[$metric->name];
-            $jsonPlots[] = array(
-                'name' => $plot->name,
-                'options' => $plot->options,
-                'data' => $plot->data
-            );
+	foreach ($metrics as $metric){
+		if(isset($this->plots[$metric->name])){
+	            $plot = $this->plots[$metric->name];
+        	    $jsonPlots[] = array(
+                	'name' => $plot->name,
+	                'options' => $plot->options,
+        	        'data' => $plot->data
+	            );
+		}
         }
         return $jsonPlots;
     }

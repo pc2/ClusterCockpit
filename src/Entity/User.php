@@ -193,7 +193,7 @@ class User implements UserInterface, \Serializable
 
     public function getPhone()
     {
-        return $this->phone;
+        return "0";
     }
 
     public function setPhone($phone)

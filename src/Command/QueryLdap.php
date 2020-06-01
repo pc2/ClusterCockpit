@@ -31,7 +31,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Adapter\LdapManager;
-
+use App\Service\Configuration;
 
 class QueryLdap extends Command
 {
@@ -61,7 +61,8 @@ class QueryLdap extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->_configuration = new Configuration($this->_em);
-        $config['ldap_connection_url'] = $this->_configuration->getValue('ldap_connection_url');
+	$config['ldap_connection_url'] = $this->_configuration->getValue('ldap_connection_url');
+	print($config['ldap_connection_url']);
         $config['ldap_search_dn'] = $this->_configuration->getValue('ldap_search_dn');
         $config['ldap_user_base'] = $this->_configuration->getValue('ldap_user_base');
         $config['ldap_user_filter'] = $this->_configuration->getValue('ldap_user_filter');

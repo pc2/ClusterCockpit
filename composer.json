@@ -80,6 +80,7 @@
         "symfony": {
             "allow-contrib": true,
             "require": "4.4.*"
-        }
+        },
+	"symfony-web-dir": "clustercockpit/"
     }
 }

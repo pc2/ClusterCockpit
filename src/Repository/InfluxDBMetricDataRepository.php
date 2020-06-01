@@ -50,9 +50,9 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
     {
         $nodes = $job->getNodeNameArray();
 
-	$flopsAny = $metrics['flops_any'];
+	$flopsAny = $metrics['flops_any_sum'];
 	$this->_logger->info(json_encode($metrics));
-        $memBw = $metrics['mem_bw'];
+        $memBw = $metrics['mem_bw_sum'];
         $nodes = implode('|', $nodes);
 
         $query = "SELECT {$flopsAny->name}*{$flopsAny->scale}
@@ -74,14 +74,14 @@ class InfluxDBMetricDataRepository implements MetricDataRepository
         $this->_timer->stop( 'InfluxDB');
 
         foreach ( $points[0] as $index => $point ){
-            $memBw = $points[1][$index]['mem_bw'];
+            $memBw = $points[1][$index]['mem_bw_sum'];
 
             if ( $memBw != 0 ){
-                $intensity = $point['flops_any']/$memBw;
+                $intensity = $point['flops_any_sum']/$memBw;
 
                 $roofline[] = array(
-                    'x' => round($intensity,2),
-                    'y' => round($point['flops_any'],2)
+                    'x' => pow(10,round(log10($intensity),2)),
+                    'y' => pow(10,round(log10($point['flops_any_sum']),2))
                 );
             }
         }

@@ -1,0 +1,11 @@
+[Unit]
+Description=Collectors for Job-scpecific monitoring
+After=cm-shared.mount
+
+[Service]
+User=root
+Type=simple
+ExecStart=/bin/bash /cm/shared/scripts/jobmonitoring/collectors.sh
+
+[Install]
+WantedBy=network.target

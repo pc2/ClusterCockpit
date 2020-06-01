@@ -106,7 +106,7 @@ class UserViewController extends AbstractController
         $search->setClusterId($control->getCluster());
 
         $form = $this->createForm(StatisticsControlType::class, $control);
-        $form->handleRequest($request);
+#        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $control = $form->getData();

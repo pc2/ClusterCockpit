@@ -1,0 +1,11 @@
+[Unit]
+Description=Detection for programs running in jobs
+After=cm-shared.mount
+
+[Service]
+User=root
+Type=simple
+ExecStart=/bin/bash /cm/shared/scripts/jobmonitoring/programdetection.sh
+
+[Install]
+WantedBy=network.target

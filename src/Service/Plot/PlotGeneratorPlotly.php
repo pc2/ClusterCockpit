@@ -113,14 +113,20 @@ class PlotGeneratorPlotly implements PlotGeneratorInterface
                         "b" => 20,
                         "t" => 30,
                         "pad" => 4
+		    ),
+		    "polar" => array(
+                    "radialaxis" => array(
+                        "angle" => 0,
+                        "range" => array(0,1),
+                        "autorange" => false,
+                        "rangemode" => "tozero",
+                        "title" => "fraction of peak"
                     ),
-                    "radialxaxis" => array(
-                        "angle" => 45,
-                    ),
-                    "angularaxis" => array(
-                        "direction" => "clockwise",
-                        "period" => 6,
-                    )
+#                    "angularaxis" => array(
+#                        "direction" => "clockwise",
+#                        "period" => 6
+#		)
+	)
                 ));
 
         foreach ($metrics as $metric){
